@@ -137,6 +137,12 @@ class OrderManager
 
     public function deleteOrder(int $id): void
     {
-        $this->orderRepository->deleteOrder($this->getOrder($id));
+        $order = $this->getOrder($id);
+
+        if (!$order) {
+            throw new \Exception('Order not found: ' . $id);
+        }
+
+        $this->orderRepository->deleteOrder($order);
     }
 }
