@@ -16,28 +16,49 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
-//    /**
-//     * @return Order[] Returns an array of Order objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('o')
-//            ->andWhere('o.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('o.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function createOrder(array $data): Order
+    {
+        $order = new Order();
+        $order->setNumber($data['number']);
+        $order->setCustomer($data['customer']);
+        $order->setDate(new \DateTime($data['date']));
+        $order->setStatus($data['status']);
+        $order->setTotal(0);
 
-//    public function findOneBySomeField($value): ?Order
-//    {
-//        return $this->createQueryBuilder('o')
-//            ->andWhere('o.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $this->_em->persist($order);
+
+        return $order;
+    }
+
+    public function updateOrder(Order $order, array $data): void
+    {
+        $order->setNumber($data['number'] ?? $order->getNumber());
+        $order->setCustomer($data['customer'] ?? $order->getCustomer());
+        $order->setDate(isset($data['date']) ? new \DateTime($data['date']) : $order->getDate());
+        $order->setStatus($data['status'] ?? $order->getStatus());
+
+        $this->_em->flush();
+    }
+
+    public function updateTotal(Order $order, int $total): void
+    {
+        $order->setTotal($total);
+        $this->_em->flush();
+    }
+
+    public function deleteOrder(Order $order): void
+    {
+        $this->_em->remove($order);
+        $this->_em->flush();
+    }
+
+    public function findOrderById(int $id): ?Order
+    {
+        return $this->find($id);
+    }
+
+    public function findAllOrders(): array
+    {
+        return $this->findAll();
+    }
 }

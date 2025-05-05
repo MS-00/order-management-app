@@ -16,28 +16,38 @@ class OrderProductRepository extends ServiceEntityRepository
         parent::__construct($registry, OrderProduct::class);
     }
 
-    //    /**
-    //     * @return OrderProduct[] Returns an array of OrderProduct objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('o')
-    //            ->andWhere('o.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('o.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findByOrderId(int $orderId): array
+    {
+        return $this->createQueryBuilder('op')
+            ->andWhere('op.orderId = :val')
+            ->setParameter('val', $orderId)
+            ->orderBy('op.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
-    //    public function findOneBySomeField($value): ?OrderProduct
-    //    {
-    //        return $this->createQueryBuilder('o')
-    //            ->andWhere('o.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function addProductToOrder(int $orderId, int $productId, int $quantity, float $price): void
+    {
+        $orderProduct = new OrderProduct();
+        $orderProduct->setOrderId($this->_em->getReference('App\Entity\Order', $orderId));
+        $orderProduct->setProductId($this->_em->getReference('App\Entity\Product', $productId));
+        $orderProduct->setQuantity($quantity);
+        $orderProduct->setPrice($price);
+
+        $this->_em->persist($orderProduct);
+        $this->_em->flush();
+    }
+
+    public function updateQuantity(OrderProduct $orderProduct, int $quantity): void
+    {
+        $orderProduct->setQuantity($quantity);
+        $this->_em->flush();
+    }
+
+    public function removeProductToOrder(OrderProduct $orderProduct): void
+    {
+        $this->_em->remove($orderProduct);
+        $this->_em->flush();
+    }
 }

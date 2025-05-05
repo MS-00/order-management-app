@@ -52,6 +52,23 @@ class AppFixtures extends Fixture
         // Update the order total
         $order->setTotal($orderProduct1->getPrice() + $orderProduct2->getPrice());
 
+        $order2 = new Order();
+        $order2->setStatus(OrderStatusEnum::CREATED);
+        $order2->setDate(new \DateTime()); // Use the existing `date` field
+        $order2->setNumber('ORD-002');
+        $order2->setCustomer('John Doe');
+        $manager->persist($order2);
+
+        // Link products to the order using orderId
+        $orderProduct3 = new OrderProduct();
+        $orderProduct3->setOrderId($order2);
+        $orderProduct3->setProductId($product1);
+        $orderProduct3->setQuantity(2);
+        $orderProduct3->setPrice($product1->getPrice() * 2);
+        $manager->persist($orderProduct3);
+
+        $order2->setTotal($orderProduct3->getPrice());
+
         // Flush all changes to the database
         $manager->flush();
     }
