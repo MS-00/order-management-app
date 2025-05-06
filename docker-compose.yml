@@ -20,8 +20,6 @@ services:
       - db
     environment:
       DATABASE_URL: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/${MYSQL_DATABASE}
-    volumes:
-      - ./backend:/var/www/html
     command: sh -c "./wait-for-it.sh db:3306 -- php bin/console doctrine:migrations:migrate --no-interaction && php bin/console doctrine:fixtures:load --no-interaction && apache2-foreground"
 
   frontend:
@@ -31,8 +29,6 @@ services:
       - "3000:80"
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/app # Mount the frontend code for live updates
 
 volumes:
   db_data:
