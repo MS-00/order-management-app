@@ -51,7 +51,8 @@ class OrderController
 
         $products = $order->getOrderProducts()->map(function ($orderProduct) {
             return [
-                'id' => $orderProduct->getProductId()->getId(),
+                'id' => $orderProduct->getId(),
+                'productId' => $orderProduct->getProductId()->getId(),
                 'name' => $orderProduct->getProductId()->getName(),
                 'code' => $orderProduct->getProductId()->getCode(),
                 'price' => $orderProduct->getProductId()->getPrice(),

@@ -11,65 +11,58 @@ use App\Model\OrderStatusEnum;
 
 class AppFixtures extends Fixture
 {
-    public function load(ObjectManager $manager): void
+    private function createRandomProduct(ObjectManager $manager): Product
     {
-        // Create demo products
-        $product1 = new Product();
-        $product1->setName('Product 1');
-        $product1->setPrice(10.99);
-        $product1->setCode('P001');
-        $manager->persist($product1);
+        $product = new Product();
+        $product->setName('Product ' . rand(1, 100));
+        $product->setCode('P' . str_pad((string) rand(1, 999), 3, '0', STR_PAD_LEFT));
+        $product->setPrice(rand(1000, 10000) / 100);
+        $manager->persist($product);
 
-        $product2 = new Product();
-        $product2->setName('Product 2');
-        $product2->setPrice(15.49);
-        $product2->setCode('P002');
-        $manager->persist($product2);
+        return $product;
+    }
 
-        // Create a demo order
+    private function createRandomOrder(ObjectManager $manager, array $products): void
+    {
         $order = new Order();
         $order->setStatus(OrderStatusEnum::PENDING);
-        $order->setDate(new \DateTime()); // Use the existing `date` field
-        $order->setNumber('ORD-001');
-        $order->setCustomer('John Doe');
+        $order->setDate(new \DateTime(sprintf('-%d days', rand(1, 30))));
+        $order->setNumber('ORD-' . str_pad((string) rand(3, 999), 3, '0', STR_PAD_LEFT));
+        $order->setCustomer('Customer ' . rand(1, 100));
         $manager->persist($order);
 
-        // Link products to the order using orderId
-        $orderProduct1 = new OrderProduct();
-        $orderProduct1->setOrderId($order);
-        $orderProduct1->setProductId($product1);
-        $orderProduct1->setQuantity(2);
-        $orderProduct1->setPrice($product1->getPrice() * 2);
-        $manager->persist($orderProduct1);
+        $total = 0;
 
-        $orderProduct2 = new OrderProduct();
-        $orderProduct2->setOrderId($order);
-        $orderProduct2->setProductId($product2);
-        $orderProduct2->setQuantity(1);
-        $orderProduct2->setPrice($product2->getPrice());
-        $manager->persist($orderProduct2);
+        $selectedProductKeys = (array) array_rand($products, min(rand(1, count($products)), count($products)));
 
-        // Update the order total
-        $order->setTotal($orderProduct1->getPrice() + $orderProduct2->getPrice());
+        foreach ($selectedProductKeys as $productIndex) {
+            $product = $products[$productIndex];
+            $quantity = rand(1, 5);
 
-        $order2 = new Order();
-        $order2->setStatus(OrderStatusEnum::CREATED);
-        $order2->setDate(new \DateTime()); // Use the existing `date` field
-        $order2->setNumber('ORD-002');
-        $order2->setCustomer('John Doe');
-        $manager->persist($order2);
+            $orderProduct = new OrderProduct();
+            $orderProduct->setOrderId($order);
+            $orderProduct->setProductId($product);
+            $orderProduct->setQuantity($quantity);
+            $orderProduct->setPrice($product->getPrice() * $quantity);
+            $manager->persist($orderProduct);
 
-        // Link products to the order using orderId
-        $orderProduct3 = new OrderProduct();
-        $orderProduct3->setOrderId($order2);
-        $orderProduct3->setProductId($product1);
-        $orderProduct3->setQuantity(2);
-        $orderProduct3->setPrice($product1->getPrice() * 2);
-        $manager->persist($orderProduct3);
+            $total += $orderProduct->getPrice();
+        }
 
-        $order2->setTotal($orderProduct3->getPrice());
+        $order->setTotal($total);
+    }
 
-        // Flush all changes to the database
+    public function load(ObjectManager $manager): void
+    {
+        $products = [];
+        for ($i = 0; $i < 10; $i++) {
+            $products[] = $this->createRandomProduct($manager);
+        }
+
+        for ($i = 0; $i < 10; $i++) {
+            $this->createRandomOrder($manager, $products);
+        }
+
         $manager->flush();
     }
 }

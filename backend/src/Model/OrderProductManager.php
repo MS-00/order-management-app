@@ -16,7 +16,7 @@ class OrderProductManager
 
     public function getOrderProduct(int $id): OrderProduct
     {
-        return $this->orderProductRepository->findById($id);
+        return $this->orderProductRepository->find($id);
     }
 
     public function getAllOrderProducts(int $orderId): array

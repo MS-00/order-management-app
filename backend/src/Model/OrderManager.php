@@ -46,7 +46,7 @@ class OrderManager
     public function addProductsToOrder(array $products, Order $order): void
     {
         foreach ($products as $productData) {
-            $product = $this->productRepository->find($productData['productId']);
+            $product = $this->productRepository->find(id: $productData['productId']);
 
             if (!$product) {
                 // throw new \Exception('Product not found: ' . $productData['productId']);
@@ -60,15 +60,15 @@ class OrderManager
                     $orderProduct,
                     $productData['quantity'],
                 );
-            }
 
-            $totalProduct = $product->getPrice() * $productData['quantity'];
+                continue;
+            }
 
             $this->orderProductRepository->addProductToOrder(
                 $order->getId(),
                 $product->getId(),
                 $productData['quantity'],
-                $totalProduct
+                $product->getPrice()
             );
         }
 
@@ -79,11 +79,16 @@ class OrderManager
     {
         $orderProducts = $this->orderProductManager->getAllOrderProducts($order->getId());
 
-        $orderProductsIds = array_column($orderProducts, 'id');
+        $orderProductsIds = [];
+
+        foreach ($orderProducts as $op) {
+            $orderProductsIds[] = $op->getId();
+        }
 
         $dataProductsIds = array_column(array_filter($products, function ($productData) {
             return isset($productData['id']);
         }), 'id');
+
 
         foreach ($orderProductsIds as $orderProductId) {
             if (!in_array($orderProductId, $dataProductsIds)) {
@@ -103,7 +108,7 @@ class OrderManager
             $total += $orderProduct->getPrice() * $orderProduct->getQuantity();
         }
 
-        $this->orderRepository->updateTotal($order, $total);
+        $this->orderRepository->updateTotal($order, round($total, 2));
     }
 
     public function updateOrder(int $id, array $data): void
@@ -119,7 +124,7 @@ class OrderManager
         $this->removeProudctsFromOrder($order, isset($data['products']) ? $data['products'] : []);
 
         if (isset($data['products'])) {
-            $this->addProductsToOrder([$data['products']], $order);
+            $this->addProductsToOrder($data['products'], $order);
         }
 
         $this->entityManager->flush();

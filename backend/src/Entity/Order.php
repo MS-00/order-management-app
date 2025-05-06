@@ -23,7 +23,7 @@ class Order
     #[ORM\Column(length: 255)]
     private ?string $customer = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "date")]
     private ?\DateTime $date = null;
 
     #[ORM\Column(enumType: OrderStatusEnum::class)]
