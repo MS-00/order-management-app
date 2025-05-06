@@ -11,7 +11,6 @@ import {
     SortingState,
     ColumnFiltersState,
 } from "@tanstack/react-table";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
     Table,
@@ -21,29 +20,20 @@ import {
     TableHead,
     TableCell,
 } from "@/components/ui/table";
-import { useNavigate } from "react-router-dom";
 
 interface DataTableProps<TData> {
     columns: ColumnDef<TData, any>[];
     data: TData[];
-    action?: (row: TData) => React.ReactNode;
 }
 
-export function DataTable<TData>({ columns, data, action }: DataTableProps<TData>) {
-    const navigate = useNavigate();
+export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
 
-    const actionColumn: ColumnDef<TData> = {
-        id: "actions",
-        header: "Actions",
-        cell: ({ row }) => (action ? action(row.original) : null),
-    };
-
     const table = useReactTable({
         data,
-        columns: action ? [...columns, actionColumn] : columns,
+        columns: columns,
         state: {
             sorting,
             columnFilters,
@@ -58,22 +48,6 @@ export function DataTable<TData>({ columns, data, action }: DataTableProps<TData
 
     return (
         <div className="">
-            <div className="flex items-center py-4">
-                <Input
-                    placeholder="Filter by customer..."
-                    value={
-                        (table
-                            .getColumn("customer")
-                            ?.getFilterValue() as string) ?? ""
-                    }
-                    onChange={(event) =>
-                        table
-                            .getColumn("customer")
-                            ?.setFilterValue(event.target.value)
-                    }
-                    className="max-w-sm"
-                />
-            </div>
             <div className="overflow-hidden rounded-lg border">
                 <Table>
                     <TableHeader className="bg-muted">

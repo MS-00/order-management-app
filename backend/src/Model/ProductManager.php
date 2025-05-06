@@ -3,15 +3,18 @@
 namespace App\Model;
 
 use App\Entity\Product;
+use App\Repository\OrderProductRepository;
 use App\Repository\ProductRepository;
 
 class ProductManager
 {
     private ProductRepository $productRepository;
+    private OrderProductRepository $orderProductRepository;
 
-    public function __construct(ProductRepository $productRepository)
+    public function __construct(ProductRepository $productRepository, OrderProductRepository $orderProductRepository)
     {
         $this->productRepository = $productRepository;
+        $this->orderProductRepository = $orderProductRepository;
     }
 
     public function createProduct(array $data): Product
@@ -46,6 +49,11 @@ class ProductManager
 
         if (!$product) {
             throw new \Exception('Product not found');
+        }
+
+        // Check if the product is in use
+        if ($this->orderProductRepository->isProductInUse($product->getId())) {
+            throw new \Exception('Cannot delete product as it is currently in use');
         }
 
         $this->productRepository->deleteProduct($product);

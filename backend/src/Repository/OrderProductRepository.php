@@ -54,4 +54,28 @@ class OrderProductRepository extends ServiceEntityRepository
         $this->_em->remove($orderProduct);
         $this->_em->flush();
     }
+
+    public function removeAllProductsToOrder(int $orderId): void
+    {
+        $orderProducts = $this->findByOrderId($orderId);
+
+        foreach ($orderProducts as $orderProduct) {
+            $this->_em->remove($orderProduct);
+        }
+
+        $this->_em->flush();
+    }
+
+    public function isProductInUse(int $productId): bool
+    {
+        // Check if the product is associated with any order products
+        $orderProducts = $this->createQueryBuilder('op')
+            ->select('count(op.id)')
+            ->where('op.productId = :productId')
+            ->setParameter('productId', $productId)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $orderProducts > 0;
+    }
 }

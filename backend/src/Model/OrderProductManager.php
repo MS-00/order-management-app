@@ -38,4 +38,9 @@ class OrderProductManager
     {
         $this->orderProductRepository->removeProductToOrder($this->getOrderProduct($id));
     }
+
+    public function removeAllProductsToOrder(int $orderId): void
+    {
+        $this->orderProductRepository->removeAllProductsToOrder($orderId);
+    }
 }

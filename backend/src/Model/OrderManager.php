@@ -148,6 +148,8 @@ class OrderManager
             throw new \Exception('Order not found: ' . $id);
         }
 
+        $this->orderProductManager->removeAllProductsToOrder($order->getId());
+
         $this->orderRepository->deleteOrder($order);
     }
 }
