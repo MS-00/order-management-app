@@ -57,6 +57,7 @@ export default function Orders() {
                 header: "Date",
                 cell: ({ row }) =>
                     formatToStringUI(new Date(row.getValue("date"))),
+                enableColumnFilter: false,
             },
             {
                 accessorKey: "status",
@@ -104,6 +105,7 @@ export default function Orders() {
                         </Button>
                     </div>
                 ),
+                enableColumnFilter: false,
             },
         ],
         []

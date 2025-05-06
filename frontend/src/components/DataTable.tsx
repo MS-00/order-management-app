@@ -20,6 +20,7 @@ import {
     TableHead,
     TableCell,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
 
 interface DataTableProps<TData> {
     columns: ColumnDef<TData, any>[];
@@ -54,15 +55,33 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
-                                    <TableHead key={header.id}>
+                                    <TableHead key={header.id} className="align-top">
                                         {header.isPlaceholder
                                             ? null
-                                            : typeof header.column.columnDef
-                                                  .header === "function"
-                                            ? header.column.columnDef.header(
-                                                  header.getContext()
-                                              )
-                                            : header.column.columnDef.header}
+                                            : (
+                                                <div>
+                                                    {typeof header.column.columnDef.header === "function"
+                                                        ? header.column.columnDef.header(
+                                                              header.getContext()
+                                                          )
+                                                        : header.column.columnDef.header}
+                                                    {header.column.getCanFilter() && (
+                                                        <Input
+                                                            type="text"
+                                                            value={
+                                                                header.column.getFilterValue() || ""
+                                                            }
+                                                            onChange={(e) =>
+                                                                header.column.setFilterValue(
+                                                                    e.target.value
+                                                                )
+                                                            }
+                                                            placeholder={`Filter ${header.column.id}`}
+                                                            className="my-2 block"
+                                                        />
+                                                    )}
+                                                </div>
+                                            )}
                                     </TableHead>
                                 ))}
                             </TableRow>

@@ -94,6 +94,7 @@ function Products() {
                         </Button>
                     </div>
                 ),
+                enableColumnFilter: false,
             },
         ],
         []
