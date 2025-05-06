@@ -1,8 +1,8 @@
-import ProductForm from "@/components/ProductForm";
+import OrderForm from "@/components/OrderForm";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
-function ProductNewPage() {
+function OrdersNewPage() {
     const navigate = useNavigate();
 
     return (
@@ -17,9 +17,9 @@ function ProductNewPage() {
                 Back
             </Button>
 
-            <ProductForm title="New Product" />
+            <OrderForm title="New Order" />
         </div>
     );
 }
 
-export default ProductNewPage;
+export default OrdersNewPage;

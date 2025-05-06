@@ -1,55 +1,46 @@
-// Request types
-export interface CreateOrderRequest {
+// Common types
+export interface OrderBase {
+    number: string;
     customer: string;
     date: string; // Format: YYYY-MM-DD
     status: string;
     total: number;
-    products: Array<{
-        productId: number;
-        quantity: number;
-    }>;
 }
 
-export interface UpdateOrderRequest {
-    customer?: string;
-    date?: string; // Format: YYYY-MM-DD
-    status?: string;
-    total?: number;
+export interface OrderProductBase {
+    productId: number;
+    quantity: number;
+}
+
+// Request types
+export interface CreateOrderRequest extends Omit<OrderBase, 'total'> {
+    products: OrderProductBase[];
+}
+
+export interface UpdateOrderRequest extends Partial<Omit<OrderBase, 'total'>> {
     products?: Array<{
         id?: number;
-        productId: number;
-        quantity: number;
-    }>;
+    } & OrderProductBase>;
 }
 
 // Response types
-export interface OrderProduct {
+export interface OrderProduct extends OrderProductBase {
     id: number;
     name: string;
     code: string;
     price: number;
-    quantity: number;
 }
 
-export interface OrderResponse {
+export interface OrderResponse extends OrderBase {
     id: number;
     number: string;
-    customer: string;
-    date: string; // Format: YYYY-MM-DD
-    status: string;
-    total: number;
     products: OrderProduct[];
 }
 
-export interface GetAllOrdersResponse {
+export interface GetAllOrdersResponse extends OrderBase {
     id: number;
     number: string;
-    customer: string;
-    date: string; // Format: YYYY-MM-DD
-    status: string;
-    total: number;
 }
-[];
 
 export interface DeleteOrderResponse {
     message: string;

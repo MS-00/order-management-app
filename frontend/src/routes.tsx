@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import App from "./App";
-import Dashboard from "@/pages/Dashoard";
+import Home from "@/pages/Home";
 import NotFound from "@/pages/NotFound";
-import OrderDetailsPage from "@/pages/OrderDetailsPage";
-import OrdersNewPage from "@/pages/OrdersNewPage";
-import Orders from "@/pages/Orders";
+import OrderDetailsPage from "@/pages/orders/OrderDetailsPage";
+import OrdersNewPage from "@/pages/orders/OrdersNewPage";
+import Orders from "@/pages/orders/Orders";
 import Products from "@/pages/products/Products";
 import ProductNewPage from "@/pages/products/ProductNewPage";
 import ProductDetailsPage from "@/pages/products/ProductDetailsPage";
@@ -14,7 +14,7 @@ const AppRoutes = () => {
         <Router>
             <Routes>
                 <Route path="/" element={<App />}>
-                    <Route index element={<Dashboard />} />
+                    <Route index element={<Home />} />
                     <Route path="orders" element={<Orders />} />
                     <Route path="orders/new" element={<OrdersNewPage />} />
                     <Route path="orders/:id" element={<OrderDetailsPage />} />

@@ -4,15 +4,10 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import useProductsApi from "@/api/product";
-import { GetAllProductsResponse } from "@/types/product";
+import { Edit } from "lucide-react";
+import { ProductResponse } from "@/types/product";
 
-interface Order {
-    name: string;
-    code: string;
-    price: number;
-}
-
-const columns: ColumnDef<Order>[] = [
+const columns: ColumnDef<ProductResponse>[] = [
     {
         accessorKey: "code",
         header: "Code",
@@ -32,25 +27,25 @@ function Products() {
 
     const navigate = useNavigate();
 
-    const [data, setData] = useState<GetAllProductsResponse>([] as any);
+    const [data, setData] = useState<Array<ProductResponse>>([]);
 
     useEffect(() => {
         getAllProducts()
             .then((products) => {
-                setData(products);
+                setData(products as unknown as ProductResponse[]);
             })
             .catch((error) => {
                 console.error("Error fetching products:", error);
             });
     }, []);
 
-    const action = (row: Order) => (
+    const action = (row: ProductResponse) => (
         <Button
             variant="outline"
             size="sm"
             onClick={() => navigate(`/products/${row.id}`)}
         >
-            View Details
+            <Edit />
         </Button>
     );
 
@@ -63,7 +58,7 @@ function Products() {
                         navigate("/products/new");
                     }}
                 >
-                    Add Order
+                    Add Product
                 </Button>
             </div>
             <div className="container mx-auto py-2">

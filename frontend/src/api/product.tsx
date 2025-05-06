@@ -1,11 +1,10 @@
 import {
     CreateProductRequest,
-    CreateProductResponse,
-    GetProductResponse,
+    ProductResponse,
     GetAllProductsResponse,
     UpdateProductRequest,
-    UpdateProductResponse,
     DeleteProductResponse,
+    UpdateProductResponse,
 } from "@/types/product";
 import useApi from "@/util/api";
 
@@ -14,11 +13,11 @@ function useProductsApi() {
 
     const createProduct = async (
         product: CreateProductRequest
-    ): Promise<CreateProductResponse> => {
+    ): Promise<ProductResponse> => {
         return await post("products", product);
     };
 
-    const getProduct = async (id: number): Promise<GetProductResponse> => {
+    const getProduct = async (id: number): Promise<ProductResponse> => {
         return await get(`products/${id}`);
     };
 

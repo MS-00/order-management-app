@@ -1,4 +1,9 @@
-import { Home, Inbox, Moon, Sun } from "lucide-react";
+import {
+    Moon,
+    Receipt,
+    ShoppingBasketIcon,
+    Sun,
+} from "lucide-react";
 
 import {
     Sidebar,
@@ -24,12 +29,12 @@ const items = [
     {
         title: "Orders",
         url: "orders",
-        icon: Home,
+        icon: Receipt,
     },
     {
         title: "Products",
         url: "products",
-        icon: Inbox,
+        icon: ShoppingBasketIcon,
     },
 ];
 

@@ -1,24 +1,24 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import useProductsApi from "@/api/product";
-import { ProductResponse } from "@/types/product";
-import ProductForm from "@/components/ProductForm";
+import useOrdersApi from "@/api/order";
+import OrderForm from "@/components/OrderForm";
+import { OrderResponse } from "@/types/order";
 import { Button } from "@/components/ui/button";
 
-function ProductDetailsPage() {
+function OrderDetailsPage() {
     const { id } = useParams();
-    const { getProduct } = useProductsApi();
-    const [product, setProduct] = useState<ProductResponse>();
+    const { getOrder } = useOrdersApi();
+    const [order, setOrder] = useState<OrderResponse>();
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        getProduct(Number(id))
-            .then((product) => {
-                setProduct(product);
+        getOrder(Number(id))
+            .then((order) => {
+                setOrder(order);
             })
             .catch((error) => {
-                console.error("Error fetching product:", error);
+                console.error("Error fetching order:", error);
             });
     }, [id]);
 
@@ -34,11 +34,9 @@ function ProductDetailsPage() {
                 Back
             </Button>
 
-            {product && (
-                <ProductForm title={"Product Details"} initialData={product} />
-            )}
+            {order && <OrderForm title="Order Details" initialData={order} />}
         </div>
     );
 }
 
-export default ProductDetailsPage;
+export default OrderDetailsPage;
