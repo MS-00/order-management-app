@@ -27,6 +27,13 @@ docker-compose --env-file .\backend\.env.dev up --build
 
 This command will build and start both the backend and frontend services, as well as the database, in Docker containers.
 
+## Accessing the Application
+
+Once the application is running, you can access it in your browser at:
+
+-   **Frontend**: [http://localhost:3000](http://localhost:3000)
+-   **Backend API**: [http://localhost:8000](http://localhost:8000)
+
 ## Database Access
 
 1. Access the database container:
